@@ -16,9 +16,9 @@
   "types": "dist/index.d.ts",
   "sideEffects": false,
   "dependencies": {
-    "@codemirror/highlight": "^0.17.0",
-    "@codemirror/language": "^0.17.0",
-    "lezer": "^0.13.0"
+    "@codemirror/highlight": "^0.18.4",
+    "@codemirror/language": "^0.18.2",
+    "lezer": "^0.13.5"
   },
   "devDependencies": {
     "@wessberg/rollup-plugin-ts": "^1.3.8",
@@ -32,10 +32,7 @@
   "directories": {
     "test": "test"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/PapersHive/lang-papershive.git"
-  },
+  "repository": "git+https://github.com/PapersHive/lang-papershive.git",
   "keywords": [
     "codemirror",
     "lang"
