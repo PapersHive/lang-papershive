@@ -1,5 +1,5 @@
 @precedence { 
-  and @left
+  and @left,
   or @left
 }
 
@@ -20,8 +20,12 @@ BinaryExpression {
   expression !or Or expression
 }
 
+Keyword {
+  Identifier ":"
+}
+
 Function {
-  Identifier ":(" expression ")"
+  Keyword "(" expression ")"
 }
 
 

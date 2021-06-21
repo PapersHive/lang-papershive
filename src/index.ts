@@ -25,7 +25,8 @@ export const papershiveLanguage = LezerLanguage.define({
         LineComment: t.lineComment,
         "( )": t.paren,
         And: t.keyword,
-        Or: t.keyword
+        Or: t.keyword,
+        Keyword: t.keyword
       })
     ]
   }),
