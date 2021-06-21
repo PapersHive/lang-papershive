@@ -1,5 +1,5 @@
 @precedence { 
-  and @left,
+  and @left
   or @left
 }
 
@@ -13,19 +13,23 @@ expression {
   Boolean |
   BinaryExpression |
   Function
-  Application
 }
 
 BinaryExpression { 
-  expression !and "AND" expression
-  expression !or "OR" expression 
+  expression !and And expression |
+  expression !or Or expression
 }
 
-Function { Identifier"(" BinaryExpression* ")" }
+Function {
+  Identifier ":(" expression ")"
+}
 
-Application { "(" BinaryExpression* ")"}
 
 @tokens {
+  And { "AND" }
+
+  Or { "OR" }
+
   Identifier { $[a-zA-Z_\-0-9]+ }
 
   String { '"' (!["\\] | "\\" _)* '"' }
@@ -37,6 +41,8 @@ Application { "(" BinaryExpression* ")"}
   space { $[ \t\n\r]+ }
 
   "(" ")"
+
+  @precedence { And, Or, Identifier }
 }
 
 @detectDelim
