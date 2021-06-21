@@ -16,14 +16,17 @@ export const papershiveLanguage = LezerLanguage.define({
         Application: delimitedIndent({ closing: ")", align: false })
       }),
       foldNodeProp.add({
-        Application: foldInside
+        Application: foldInside,
+        Function: foldInside
       }),
       styleTags({
-        Identifier: t.string,
+        Identifier: t.variableName,
         Boolean: t.bool,
         String: t.string,
         LineComment: t.lineComment,
-        "( )": t.paren
+        "( )": t.paren,
+        AND: t.keyword,
+        OR: t.keyword
       })
     ]
   }),

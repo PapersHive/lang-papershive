@@ -1,3 +1,8 @@
+@precedence { 
+  and @left,
+  or @left
+}
+
 @top Program { expression* }
 
 @skip { space | LineComment }
@@ -6,8 +11,19 @@ expression {
   Identifier |
   String |
   Boolean |
-  Application { "(" expression* ")" }
+  BinaryExpression |
+  Function
+  Application
 }
+
+BinaryExpression { 
+  expression !and "AND" expression
+  expression !or "OR" expression 
+}
+
+Function { Identifier"(" BinaryExpression* ")" }
+
+Application { "(" BinaryExpression* ")"}
 
 @tokens {
   Identifier { $[a-zA-Z_\-0-9]+ }
