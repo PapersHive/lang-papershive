@@ -19,11 +19,13 @@ export const papershiveLanguage = LezerLanguage.define({
         Application: foldInside
       }),
       styleTags({
-        Identifier: t.string,
+        Identifier: t.variableName,
         Boolean: t.bool,
         String: t.string,
         LineComment: t.lineComment,
-        "( )": t.paren
+        "( )": t.paren,
+        And: t.keyword,
+        Or: t.keyword
       })
     ]
   }),
