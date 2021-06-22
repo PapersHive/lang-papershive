@@ -1,6 +1,7 @@
-@precedence { 
-  logicAnd @left,
-  logicOr @left
+@precedence {
+  compare @left
+  and @left
+  or @left
 }
 
 @top Program { expression* }
@@ -10,14 +11,14 @@
 expression {
   Identifier |
   String |
-  Boolean |
   BinaryExpression |
   Function
 }
 
-BinaryExpression { 
-  ( expression !logicAnd LogicAnd expression ) |
-  ( expression !logicOr LogicOr expression )
+BinaryExpression {
+  expression !compare (op<Compare, "==" | ">=" | "<=" | "!="> | CompareOp { "<" | ">" }) expression |
+  expression !and (op<Logic, "AND">) expression |
+  expression !or (op<Logic, "OR">) expression
 }
 
 Function {
@@ -26,17 +27,13 @@ Function {
 
 
 @tokens {
-  Keyword { "au:" | "a:" | "t:" | "ta:" | "y:" | "c:" }
+  op[@name={name} "Op"]<name, body> { body }
 
-  LogicAnd { "AND" }
-
-  LogicOr { "OR" }
+  Keyword { Identifier ":" }
 
   Identifier { $[a-zA-Z_\-0-9]+ }
 
   String { '"' (!["\\] | "\\" _)* '"' }
-
-  Boolean { "#t" | "#f" }
 
   LineComment { ";" ![\n]* }
 
@@ -44,7 +41,7 @@ Function {
 
   "(" ")"
 
-  @precedence { LogicAnd, LogicOr, Keyword, Identifier }
+  @precedence { op, Keyword, Identifier }
 }
 
 @detectDelim

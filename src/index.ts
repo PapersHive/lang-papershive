@@ -1,33 +1,30 @@
 import { parser } from "./syntax.grammar";
 import {
   LezerLanguage,
-  LanguageSupport,
-  indentNodeProp,
+  LanguageSupport
+  /* indentNodeProp,
   foldNodeProp,
   foldInside,
-  delimitedIndent
+  delimitedIndent */
 } from "@codemirror/language";
 import { styleTags, tags as t } from "@codemirror/highlight";
+import { completeFromList } from "@codemirror/autocomplete";
 
 export const papershiveLanguage = LezerLanguage.define({
   parser: parser.configure({
     props: [
-      indentNodeProp.add({
-        Application: delimitedIndent({ closing: ")", align: false })
-      }),
-      foldNodeProp.add({
+      /* foldNodeProp.add({
         Application: foldInside
-      }),
+      }), */
       styleTags({
         Identifier: t.variableName,
-        Boolean: t.bool,
         String: t.string,
         LineComment: t.lineComment,
         "( )": t.paren,
-        LogicAnd: t.keyword,
-        LogicOr: t.keyword,
-        Keyword: t.keyword,
-        Function: t.function
+        LogicOp: t.logicOperator,
+        CompareOp: t.compareOperator,
+        Function: t.function,
+        "au: a: t: ta: y: c:": t.keyword
       })
     ]
   }),
@@ -36,6 +33,19 @@ export const papershiveLanguage = LezerLanguage.define({
   }
 });
 
+export const papershiveCompletion = papershiveLanguage.data.of({
+  autocomplete: completeFromList([
+    { label: "au:", type: "function" },
+    { label: "a:", type: "function" },
+    { label: "t:", type: "function" },
+    { label: "ta:", type: "function" },
+    { label: "y:", type: "function" },
+    { label: "c:", type: "function" },
+    { label: "AND", type: "logicOperator" },
+    { label: "OR", type: "logicOperator" }
+  ])
+});
+
 export function papershive() {
-  return new LanguageSupport(papershiveLanguage);
+  return new LanguageSupport(papershiveLanguage, [papershiveCompletion]);
 }
