@@ -9,6 +9,7 @@
 @skip { space | LineComment }
 
 expression {
+  Number |
   String |
   BinaryExpression |
   Function
@@ -31,7 +32,9 @@ Function {
 
   Keyword { "au:" | "a:" | "t:" | "ta:" | "y:" | "c:" }
 
-  String { $[a-zA-Z_\-0-9]+ | '"' (!["\\] | "\\" _)* '"' }
+  String { '"' (!["\\] | "\\" _)* '"' }
+
+  Number { $[0-9]+ }
 
   LineComment { ";" ![\n]* }
 

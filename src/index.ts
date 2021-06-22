@@ -4,12 +4,12 @@ import {
   LanguageSupport,
   // indentNodeProp,
   foldNodeProp,
-  foldInside,
-  delimitedIndent
+  foldInside
+  //delimitedIndent
 } from "@codemirror/language";
 import { styleTags, tags as t } from "@codemirror/highlight";
 import { completeFromList, Completion } from "@codemirror/autocomplete";
-import { EditorView } from "@codemirror/view";
+// import { EditorView } from "@codemirror/view";
 
 export const papershiveLanguage = LezerLanguage.define({
   parser: parser.configure({
@@ -25,7 +25,8 @@ export const papershiveLanguage = LezerLanguage.define({
         LogicAnd: t.operatorKeyword,
         LogicOr: t.operatorKeyword,
         CompareOp: t.compareOperator,
-        Keyword: t.keyword
+        Keyword: t.keyword,
+        Number: t.number
       })
     ]
   }),
