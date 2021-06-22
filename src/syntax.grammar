@@ -16,20 +16,21 @@ expression {
 }
 
 BinaryExpression {
-  expression !compare (op<Compare, "==" | ">=" | "<=" | "!="> | CompareOp { "<" | ">" }) expression |
-  expression !and (op<Logic, "AND">) expression |
-  expression !or (op<Logic, "OR">) expression
+  expression !compare CompareOp expression |
+  expression !and LogicAnd expression |
+  expression !or LogicOr expression
 }
 
 Function {
   Keyword "(" expression ")"
 }
 
-
 @tokens {
-  op[@name={name} "Op"]<name, body> { body }
+  LogicAnd { "AND" }
+  LogicOr { "OR" }
+  CompareOp { "<" | ">" | "==" | ">=" | "<=" | "!=" }
 
-  Keyword { Identifier ":" }
+  Keyword { "au:" | "a:" | "t:" | "ta:" | "y:" | "c:" }
 
   Identifier { $[a-zA-Z_\-0-9]+ }
 
@@ -41,7 +42,9 @@ Function {
 
   "(" ")"
 
-  @precedence { op, Keyword, Identifier }
+  @precedence { LogicAnd, Identifier }
+  @precedence { LogicOr, Identifier }
+  @precedence { Keyword, Identifier }
 }
 
 @detectDelim

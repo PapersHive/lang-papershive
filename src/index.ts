@@ -22,7 +22,8 @@ export const papershiveLanguage = LezerLanguage.define({
         String: t.string,
         LineComment: t.lineComment,
         "( )": t.paren,
-        LogicOp: t.logicOperator,
+        LogicAnd: t.logicOperator,
+        LogicOr: t.logicOperator,
         CompareOp: t.compareOperator,
         Function: t.function,
         "au: a: t: ta: y: c:": t.keyword
