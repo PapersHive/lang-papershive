@@ -22,8 +22,8 @@ export const papershiveLanguage = LezerLanguage.define({
         String: t.string,
         LineComment: t.lineComment,
         "( )": t.paren,
-        LogicAnd: t.logicOperator,
-        LogicOr: t.logicOperator,
+        LogicAnd: t.operatorKeyword,
+        LogicOr: t.operatorKeyword,
         CompareOp: t.compareOperator,
         Keyword: t.keyword
       })
@@ -40,20 +40,29 @@ export const papershiveCompletion = papershiveLanguage.data.of({
       label: "au:",
       type: "function",
       detail: "Authors",
-      apply: (
-        view: EditorView,
-        completion: Completion,
-        from: number,
-        to: number
-      ) => {
-        console.log(EditorView, completion, from, to);
-      }
+      apply: 'au:("")'
     },
     { label: "a:", type: "function", detail: "Abstracts", apply: 'a:("")' },
-    { label: "t:", type: "function", detail: "Titless" },
-    { label: "ta:", type: "function", detail: "Titles and Abstracts" },
-    { label: "y:", type: "function", detail: "Year" },
-    { label: "c:", type: "function", detail: "Citations" },
+    { label: "t:", type: "function", detail: "Titless", apply: 't:("")' },
+    {
+      label: "ta:",
+      type: "function",
+      detail: "Titles and Abstracts",
+      apply: 'ta:("")'
+    },
+    { label: "c:", type: "function", detail: "Citations", apply: 'c:("")' },
+    { label: "y:<", type: "function", detail: "Published before year" },
+    { label: "y:>", type: "function", detail: "Published after year" },
+    {
+      label: "y:<=",
+      type: "function",
+      detail: "Published before and including year"
+    },
+    {
+      label: "y:>=",
+      type: "function",
+      detail: "Published after and including year"
+    },
     {
       label: "AND",
       type: "logicOperator"

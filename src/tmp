@@ -1,0 +1,146 @@
+@precedence { 
+  logicAnd @left,
+  logicOr @left
+}
+
+@top Program { expression* }
+
+@skip { space | LineComment }
+
+expression {
+  Identifier |
+  String |
+  Boolean |
+  BinaryExpression |
+  Function
+}
+
+BinaryExpression { 
+  ( expression !logicAnd LogicAnd expression ) |
+  ( expression !logicOr LogicOr expression )
+}
+
+Function {
+  Keyword "(" expression ")"
+}
+
+
+@tokens {
+  Keyword { "au:" | "a:" | "t:" | "ta:" | "y:" | "c:" }
+
+  And { "AND" }
+
+  LogicOr { "OR" }
+
+  Identifier { $[a-zA-Z_\-0-9]+ }
+
+  String { '"' (!["\\] | "\\" _)* '"' }
+
+  Boolean { "#t" | "#f" }
+
+  LineComment { ";" ![\n]* }
+
+  space { $[ \t\n\r]+ }
+
+  "(" ")"
+
+  @precedence { LogicAnd, LogicOr, Keyword, Identifier }
+}
+
+@detectDelim
+
+
+
+
+
+
+
+import { parser } from "./syntax.grammar";
+import {
+  LezerLanguage,
+  LanguageSupport
+  /* indentNodeProp,
+  foldNodeProp,
+  foldInside,
+  delimitedIndent */
+} from "@codemirror/language";
+import { styleTags, tags as t } from "@codemirror/highlight";
+import { completeFromList } from "@codemirror/autocomplete";
+
+export const papershiveLanguage = LezerLanguage.define({
+  parser: parser.configure({
+    props: [
+      /* foldNodeProp.add({
+        Application: foldInside
+      }), */
+      styleTags({
+        Identifier: t.variableName,
+        Boolean: t.bool,
+        String: t.string,
+        LineComment: t.lineComment,
+        "( )": t.paren,
+        LogicAnd: t.keyword,
+        LogicOr: t.keyword,
+        Keyword: t.keyword,
+        Function: t.function
+      })
+    ]
+  }),
+  languageData: {
+    commentTokens: { line: ";" }
+  }
+});
+
+export const papershiveCompletion = papershiveLanguage.data.of({
+  autocomplete: completeFromList([
+    { label: "au:", type: "keyword" },
+    { label: "a:", type: "keyword" },
+    { label: "t:", type: "keyword" },
+    { label: "ta:", type: "function" },
+    { label: "y:", type: "function" },
+    { label: "c:", type: "function" },
+    { label: "AND", type: "function" },
+    { label: "OR", type: "function" }
+  ])
+});
+
+export function papershive() {
+  return new LanguageSupport(papershiveLanguage, [papershiveCompletion]);
+}
+
+
+function getCompletions(token, context) {
+  var found = [], start = token.string;
+  function maybeAdd(str) {
+    if (str.indexOf(start) == 0) found.push(str);
+  }
+  function gatherCompletions(obj) {
+    if (typeof obj == "string") forEach(stringProps, maybeAdd);
+    else if (obj instanceof Array) forEach(arrayProps, maybeAdd);
+    else if (obj instanceof Function) forEach(funcProps, maybeAdd);
+    for (var name in obj) maybeAdd(name);
+  }
+
+  if (context) {
+    // If this is a property, see if it belongs to some object we can
+    // find in the current environment.
+    var obj = context.pop(), base;
+    if (obj.className == "js-variable")
+      base = window[obj.string];
+    else if (obj.className == "js-string")
+      base = "";
+    else if (obj.className == "js-atom")
+      base = 1;
+    while (base != null && context.length)
+      base = base[context.pop().string];
+    if (base != null) gatherCompletions(base);
+  }
+  else {
+    // If not, just look in the window object and any local scope
+    // (reading into JS mode internals to get at the local variables)
+    for (var v = token.state.localVars; v; v = v.next) maybeAdd(v.name);
+    gatherCompletions(window);
+    forEach(keywords, maybeAdd);
+  }
+  return found;
+}
