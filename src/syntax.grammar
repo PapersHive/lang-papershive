@@ -1,6 +1,6 @@
 @precedence { 
-  and @left,
-  or @left
+  logicAnd @left,
+  logicOr @left
 }
 
 @top Program { expression* }
@@ -16,8 +16,8 @@ expression {
 }
 
 BinaryExpression { 
-  expression !and And expression |
-  expression !or Or expression
+  ( expression !logicAnd LogicAnd expression ) |
+  ( expression !logicOr LogicOr expression )
 }
 
 Function {
@@ -26,11 +26,11 @@ Function {
 
 
 @tokens {
-  Keyword { $[a-zA-Z_\-0-9]+ ":"}
+  Keyword { "au:" | "a:" | "t:" | "ta:" | "y:" | "c:" }
 
-  And { "AND" }
+  LogicAnd { "AND" }
 
-  Or { "OR" }
+  LogicOr { "OR" }
 
   Identifier { $[a-zA-Z_\-0-9]+ }
 
@@ -44,7 +44,7 @@ Function {
 
   "(" ")"
 
-  @precedence { And, Or, Keyword, Identifier }
+  @precedence { LogicAnd, LogicOr, Keyword, Identifier }
 }
 
 @detectDelim
