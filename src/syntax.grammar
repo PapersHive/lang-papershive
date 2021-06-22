@@ -9,7 +9,6 @@
 @skip { space | LineComment }
 
 expression {
-  Identifier |
   String |
   BinaryExpression |
   Function
@@ -32,9 +31,7 @@ Function {
 
   Keyword { "au:" | "a:" | "t:" | "ta:" | "y:" | "c:" }
 
-  Identifier { $[a-zA-Z_\-0-9]+ }
-
-  String { '"' (!["\\] | "\\" _)* '"' }
+  String { $[a-zA-Z_\-0-9]+ | '"' (!["\\] | "\\" _)* '"' }
 
   LineComment { ";" ![\n]* }
 
@@ -42,9 +39,9 @@ Function {
 
   "(" ")"
 
-  @precedence { LogicAnd, Identifier }
-  @precedence { LogicOr, Identifier }
-  @precedence { Keyword, Identifier }
+  @precedence { LogicAnd, String }
+  @precedence { LogicOr, String }
+  @precedence { Keyword, String }
 }
 
 @detectDelim

@@ -1,11 +1,11 @@
 import { parser } from "./syntax.grammar";
 import {
   LezerLanguage,
-  LanguageSupport
-  /* indentNodeProp,
+  LanguageSupport,
+  // indentNodeProp,
   foldNodeProp,
   foldInside,
-  delimitedIndent */
+  delimitedIndent
 } from "@codemirror/language";
 import { styleTags, tags as t } from "@codemirror/highlight";
 import { completeFromList, Completion } from "@codemirror/autocomplete";
@@ -14,19 +14,18 @@ import { EditorView } from "@codemirror/view";
 export const papershiveLanguage = LezerLanguage.define({
   parser: parser.configure({
     props: [
-      /* foldNodeProp.add({
-        Application: foldInside
-      }), */
+      foldNodeProp.add({
+        BinaryExpression: foldInside,
+        Function: foldInside
+      }),
       styleTags({
-        Identifier: t.variableName,
         String: t.string,
         LineComment: t.lineComment,
         "( )": t.paren,
         LogicAnd: t.logicOperator,
         LogicOr: t.logicOperator,
         CompareOp: t.compareOperator,
-        Function: t.function,
-        "au: a: t: ta: y: c:": t.keyword
+        Keyword: t.keyword
       })
     ]
   }),
