@@ -8,7 +8,8 @@ import {
   delimitedIndent */
 } from "@codemirror/language";
 import { styleTags, tags as t } from "@codemirror/highlight";
-import { completeFromList } from "@codemirror/autocomplete";
+import { completeFromList, Completion } from "@codemirror/autocomplete";
+import { EditorView } from "@codemirror/view";
 
 export const papershiveLanguage = LezerLanguage.define({
   parser: parser.configure({
@@ -35,13 +36,28 @@ export const papershiveLanguage = LezerLanguage.define({
 
 export const papershiveCompletion = papershiveLanguage.data.of({
   autocomplete: completeFromList([
-    { label: "au:", type: "function" },
-    { label: "a:", type: "function" },
-    { label: "t:", type: "function" },
-    { label: "ta:", type: "function" },
-    { label: "y:", type: "function" },
-    { label: "c:", type: "function" },
-    { label: "AND", type: "logicOperator" },
+    {
+      label: "au:",
+      type: "function",
+      detail: "Authors",
+      apply: (
+        view: EditorView,
+        completion: Completion,
+        from: number,
+        to: number
+      ) => {
+        console.log(EditorView, completion, from, to);
+      }
+    },
+    { label: "a:", type: "function", detail: "Abstracts", apply: 'a:("")' },
+    { label: "t:", type: "function", detail: "Titless" },
+    { label: "ta:", type: "function", detail: "Titles and Abstracts" },
+    { label: "y:", type: "function", detail: "Year" },
+    { label: "c:", type: "function", detail: "Citations" },
+    {
+      label: "AND",
+      type: "logicOperator"
+    },
     { label: "OR", type: "logicOperator" }
   ])
 });
